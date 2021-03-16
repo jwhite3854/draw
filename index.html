@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>5 Card Draw</title>
+        <title>Best Hands</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="css/uikit.min.css" />
@@ -9,16 +9,20 @@
         <script src="js/uikit-icons.min.js"></script>
     </head>
     <body>
-        <a href="#" onclick="download_table_as_csv('board');">Download as CSV</a>
-        <table class="uk-table uk-table-striped uk-table-small" style="width:720px;">
-            <thead>
-                <td>Hand</td>
-                <td>Best</td>
-                <td>Second</td>
-            </thead>
-            <tbody id="board"></tbody>
-        </table>
-
+    <div class="uk-container uk-container-small uk-position-relative">
+        <div class="uk-card uk-card-default uk-card-body uk-margin-top">
+            <h1 class="uk-card-title" style="font-size:18px">Best Hands</h1>     
+            <table class="uk-table uk-table-striped uk-table-small uk-table-responsive" style="">
+                <thead>
+                    <td>Hand</td>
+                    <td>Best</td>
+                    <td>Second</td>
+                </thead>
+                <tbody id="board"></tbody>
+            </table>
+            <a href="#" onclick="event.preventDefault(); download_table_as_csv('board');">Download as CSV</a>
+        </div>
+    </div>
         <script>
             let numbers = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
             let suits = ['s','h','d','c'];
