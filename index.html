@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>5 Card Draw</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/uikit.min.css" />
+        <script src="js/uikit.min.js"></script>
+        <script src="js/uikit-icons.min.js"></script>
+    </head>
+    <body>
+        <a href="#" onclick="download_table_as_csv('board');">Download as CSV</a>
+        <table class="uk-table uk-table-striped uk-table-small" style="width:720px;">
+            <thead>
+                <td>Hand</td>
+                <td>Best</td>
+                <td>Second</td>
+            </thead>
+            <tbody id="board"></tbody>
+        </table>
+
+        <script>
+            let numbers = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+            let suits = ['s','h','d','c'];
+
+            function deal() {
+                let hand = [];
+
+                while ( hand.length < 5 ) {
+                    let key = numbers[Math.floor(Math.random() * numbers.length)]; 
+                    key += suits[Math.floor(Math.random() * suits.length)]; 
+
+                    if (!hand.includes(key)) {
+                        hand.push(key);
+                    }
+                }
+                
+                return hand;
+            }
+
+            function addRow(tableID, hand, rowId) {
+                let tableRef = document.getElementById(tableID);
+                let newRow = tableRef.insertRow(-1);
+                let handCell = newRow.insertCell(0);
+                let handText = document.createTextNode(hand.join(' '));
+                handCell.appendChild(handText);
+
+                let bestCell = newRow.insertCell(1);
+                let bestInput = document.createElement("input");
+                bestInput.setAttribute('type', 'text');
+                bestInput.setAttribute('id', 'best'+rowId);
+                bestInput.className = "uk-input";
+                bestCell.appendChild(bestInput);
+
+                let secCell = newRow.insertCell(2);
+                let secInput = document.createElement("input");
+                secInput.setAttribute('type', 'text');
+                secInput.setAttribute('id', 'sec'+rowId);
+                secInput.className = "uk-input";
+                secCell.appendChild(secInput);
+            }
+
+            for (let i=0;i<100;i++) {
+                let hand = deal();
+                addRow('board', hand, i);
+            }
+
+
+            function download_table_as_csv(table_id) {
+                let rows = document.querySelectorAll('tbody#' + table_id + ' tr');
+                
+                let csv = [];
+                for (let i = 0; i < rows.length; i++) {
+                    let row = [], cols = rows[i].querySelectorAll('td');
+                    for (let j = 0; j < cols.length; j++) {
+                        let data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s)/gm, ' ')
+                        if ( data === '' ) {
+                            let input = false;
+                            if ( j === 1 ) {
+                                input = document.getElementById('best' + i);
+                            } else if ( j === 2 ) {
+                                input = document.getElementById('sec' + i);
+                            }
+
+                            if (input) {
+                                data = input.value;
+                            }
+                        }
+                        
+                        data = data.replace(/"/g, '""');
+                        row.push('"' + data + '"');
+                    }
+                    csv.push(row.join());
+                }
+                let csv_string = csv.join('\n');
+    
+                let filename = 'export_' + table_id + '.csv';
+                let link = document.createElement('a');
+                link.style.display = 'none';
+                link.setAttribute('target', '_blank');
+                link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv_string));
+                link.setAttribute('download', filename);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        </script>
+    </body>
+</html>
