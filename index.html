@@ -15,6 +15,7 @@
             <table class="uk-table uk-table-striped uk-table-small uk-table-responsive" style="">
                 <thead>
                     <td>Hand</td>
+                    <td>Board</td>
                     <td>Best</td>
                     <td>Second</td>
                 </thead>
@@ -27,14 +28,14 @@
             let numbers = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
             let suits = ['s','h','d','c'];
 
-            function deal() {
+            function deal(size, exclude = []) {
                 let hand = [];
 
-                while ( hand.length < 5 ) {
+                while ( hand.length < size ) {
                     let key = numbers[Math.floor(Math.random() * numbers.length)]; 
                     key += suits[Math.floor(Math.random() * suits.length)]; 
 
-                    if (!hand.includes(key)) {
+                    if (!hand.includes(key) || !exclude.includes(key)) {
                         hand.push(key);
                     }
                 }
@@ -42,21 +43,26 @@
                 return hand;
             }
 
-            function addRow(tableID, hand, rowId) {
+            function addRow(tableID, hand, board, rowId) {
                 let tableRef = document.getElementById(tableID);
                 let newRow = tableRef.insertRow(-1);
+                
                 let handCell = newRow.insertCell(0);
                 let handText = document.createTextNode(hand.join(' '));
                 handCell.appendChild(handText);
 
-                let bestCell = newRow.insertCell(1);
+                let boardCell = newRow.insertCell(1);
+                let boardText = document.createTextNode(board.join(' '));
+                boardCell.appendChild(boardText);
+
+                let bestCell = newRow.insertCell(2);
                 let bestInput = document.createElement("input");
                 bestInput.setAttribute('type', 'text');
                 bestInput.setAttribute('id', 'best'+rowId);
                 bestInput.className = "uk-input";
                 bestCell.appendChild(bestInput);
 
-                let secCell = newRow.insertCell(2);
+                let secCell = newRow.insertCell(3);
                 let secInput = document.createElement("input");
                 secInput.setAttribute('type', 'text');
                 secInput.setAttribute('id', 'sec'+rowId);
@@ -64,9 +70,10 @@
                 secCell.appendChild(secInput);
             }
 
-            for (let i=0;i<100;i++) {
-                let hand = deal();
-                addRow('board', hand, i);
+            for (let i=0;i<20;i++) {
+                let hand = deal(2);
+                let board = deal(5, hand);
+                addRow('board', hand, board, i);
             }
 
 
@@ -80,9 +87,9 @@
                         let data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s)/gm, ' ')
                         if ( data === '' ) {
                             let input = false;
-                            if ( j === 1 ) {
+                            if ( j === 2 ) {
                                 input = document.getElementById('best' + i);
-                            } else if ( j === 2 ) {
+                            } else if ( j === 3 ) {
                                 input = document.getElementById('sec' + i);
                             }
 
