@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Heads Up Winner</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/uikit.min.css" />
+        <script src="js/uikit.min.js"></script>
+        <script src="js/uikit-icons.min.js"></script>
+    </head>
+    <body>
+        <nav class="uk-navbar uk-navbar-container uk-margin">
+            <div class="uk-navbar-left">
+                <ul class="uk-navbar-nav">
+                    <li><a href="#">HOME</a></li>
+                </ul>
+            </div>
+            <div class="uk-navbar-right">
+                <ul class="uk-navbar-nav">
+                    <li><a href="best.html">Best Hands</a></li>
+                    <li class="uk-active"><a href="headsup.html">Heads Up</a></li>
+                    <li><a href="range.html">Ranges</a></li>
+                </ul>
+                <div>
+                    <a class="uk-navbar-toggle" uk-navbar-toggle-icon href="#"></a>
+                </div>
+            </div>
+        </nav>
+    
+        <div class="uk-container uk-container-small uk-position-relative uk-margin-bottom">
+            <div class="uk-card uk-card-default uk-card-body">
+                <h1 class="uk-card-title" style="font-size:18px">Heads Up Winner</h1>     
+                <table id="board" class="uk-table uk-table-striped uk-table-small uk-table-responsive">
+                    <thead>
+                        <tr>
+                            <td>H</td>
+                            <td>V</td>
+                            <td>Board</td>
+                            <td>Winning Hand</td>
+                            <td>Winner</td>
+                            <td>Hyp. Nuts</td>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tbody style="display:none;">
+                        <tr>
+                            <td>__t1__</td>
+                            <td>__t2__</td>
+                            <td>__t3__</td>
+                            <td><input type="text" name="hand__id__" class="uk-input uk-form-width-small" /></td>
+                            <td><input type="text" name="winner__id__" class="uk-input uk-form-width-xsmall" /></td>
+                            <td><input type="text" name="nuts__id__" class="uk-input uk-form-width-xsmall" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a href="#" onclick="event.preventDefault(); downloadCSV('board');">Download as CSV</a>
+            </div>
+        </div>
+        <script src="js/main.js"></script>
+        <script>
+            for (let i=0;i<20;i++) {
+                let hero = deal(2);
+                let vill = deal(2, hero);
+                let board = deal(5, vill.concat(hero));
+                let data = {
+                    "t1": hero.join(''),
+                    "t2": vill.join(''),
+                    "t3": board.join('')
+                };
+                addNextRow('board', i, data);
+            }
+        </script>
+    </body>
+</html>

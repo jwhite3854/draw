@@ -1,19 +1,12 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Best Hands</title>
+        <title>Ranges</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="css/uikit.min.css" />
         <script src="js/uikit.min.js"></script>
         <script src="js/uikit-icons.min.js"></script>
-        <style>
-            .narrow-menu-show { display: none; }
-            @media (max-width: 767px) { /* @breakpoint-small */
-                .narrow-menu-hide { display: none; }
-                .narrow-menu-show { display: block; }
-            }
-        </style>
     </head>
     <body>
         <nav class="uk-navbar uk-navbar-container uk-margin">
@@ -26,7 +19,7 @@
                 <ul class="uk-navbar-nav narrow-menu-hide">
                     <li><a href="best.html">Best Hands</a></li>
                     <li><a href="headsup.html">Heads Up</a></li>
-                    <li><a href="range.html">Ranges</a></li>
+                    <li class="uk-active"><a href="range.html">Ranges</a></li>
                 </ul>
                 <div class="narrow-menu-show">
                     <a class="uk-navbar-toggle uk-icon uk-navbar-toggle-icon" href="#" uk-navbar-toggle-icon="" aria-expanded="false">
@@ -40,7 +33,7 @@
                         <ul class="uk-nav uk-nav-default">
                             <li><a href="best.html">Best Hands</a></li>
                             <li><a href="headsup.html">Heads Up</a></li>
-                            <li><a href="range.html">Ranges</a></li>
+                            <li class="uk-active"><a href="range.html">Ranges</a></li>
                         </ul>
                     </div>
                 </div>
@@ -48,8 +41,29 @@
         </nav>
     
         <div class="uk-container uk-container-small uk-position-relative uk-margin-bottom">
-            <div class="uk-card uk-card-default uk-card-body">
-                <p>I don't know what to put here.</p>
+            <div class="uk-child-width-1-2@s uk-grid-match" uk-grid>
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <h3 class="uk-card-title">Range 1</h3>
+                        <img data-src="images/range1.png" uk-img>
+                        <p>22+, A2s+, K6s+, Q7s+, J7s+, T7s+, 97s+, 86s+, 75s+, 65s, 54s, ATo+, KTo+, QTo+, JTo</p>
+                    </div>
+                </div>
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <h3 class="uk-card-title">Range 2</h3>
+                        <img data-src="images/range2.png" uk-img>
+                        <p>66+, A9s+, KTs+, QTs+, JTs, T9s, 98s, AJo+, KQo</p>
+                    </div>
+                </div>
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <h3 class="uk-card-title">Range 3</h3>
+                        <img data-src="images/range3.png" uk-img>
+                        <p>TT-22, A9s-A6s, KJs-K9s, Q9s+, J9s+, T8s+, 97s+, 86s+, 76s, 65s, 54s, AJo-ATo, KJo+</p>
+                    </div>
+                </div>
+                
             </div>
         </div>
     </body>

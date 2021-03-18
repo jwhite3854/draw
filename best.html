@@ -7,13 +7,6 @@
         <link rel="stylesheet" href="css/uikit.min.css" />
         <script src="js/uikit.min.js"></script>
         <script src="js/uikit-icons.min.js"></script>
-        <style>
-            .narrow-menu-show { display: none; }
-            @media (max-width: 767px) { /* @breakpoint-small */
-                .narrow-menu-hide { display: none; }
-                .narrow-menu-show { display: block; }
-            }
-        </style>
     </head>
     <body>
         <nav class="uk-navbar uk-navbar-container uk-margin">
@@ -24,7 +17,7 @@
             </div>
             <div class="uk-navbar-right uk-margin-right">
                 <ul class="uk-navbar-nav narrow-menu-hide">
-                    <li><a href="best.html">Best Hands</a></li>
+                    <li class="uk-active"><a href="best.html">Best Hands</a></li>
                     <li><a href="headsup.html">Heads Up</a></li>
                     <li><a href="range.html">Ranges</a></li>
                 </ul>
@@ -38,7 +31,7 @@
                     </a>
                     <div class="uk-navbar-dropdown" uk-drop="mode: hover; cls-drop: uk-navbar-dropdown;" >
                         <ul class="uk-nav uk-nav-default">
-                            <li><a href="best.html">Best Hands</a></li>
+                            <li class="uk-active"><a href="best.html">Best Hands</a></li>
                             <li><a href="headsup.html">Heads Up</a></li>
                             <li><a href="range.html">Ranges</a></li>
                         </ul>
@@ -49,8 +42,33 @@
     
         <div class="uk-container uk-container-small uk-position-relative uk-margin-bottom">
             <div class="uk-card uk-card-default uk-card-body">
-                <p>I don't know what to put here.</p>
+                <h1 class="uk-card-title" style="font-size:18px">Best Hands</h1>     
+                <table id="board" class="uk-table uk-table-striped uk-table-small uk-table-responsive">
+                    <thead>
+                        <tr>
+                            <td>Board</td>
+                            <td>Best</td>
+                            <td>Second</td>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tbody style="display:none;">
+                        <tr>
+                            <td>__t1__</td>
+                            <td><input type="text" name="best__id__" class="uk-input" /></td>
+                            <td><input type="text" name="sec__id__" class="uk-input" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a href="#" onclick="event.preventDefault(); downloadCSV('board');">Download as CSV</a>
             </div>
         </div>
+        <script src="js/main.js"></script>
+        <script>
+            for (let i=0;i<20;i++) {
+                let board = deal(5);
+                addNextRow('board', i, {"t1": board.join('')});
+            }
+        </script>
     </body>
 </html>
