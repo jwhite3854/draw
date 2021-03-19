@@ -16,6 +16,16 @@ let deal = function(size, dealt = []) {
     return hand;
 }
 
+let decorateCards = function(cards) {
+    let output = '';
+
+    for ( let i = 0; i < cards.length; i++ ) {
+        output += '<div class="jw-card'+cards[i].substr(1,1)+'">'+cards[i].substr(0,1)+'</div>';
+    }
+
+    return output;
+}
+
 let addNextRow = function(table_id, row_id, row_data = {}) {
     let table = document.getElementById(table_id);
     let newRow = table.tBodies.item(1).innerHTML;
@@ -36,7 +46,7 @@ let generateCSVString = function(table_id) {
         for (let j = 0; j < cells.length; j++) {
             let data = '';
             if (cells[j].innerHTML.includes("input")) {
-                data = cells[j].firstChild.value;
+                data = cells[j].lastChild.value;
             } else {
                 data = cells[j].innerText;
             }

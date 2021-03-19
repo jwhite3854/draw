@@ -1,0 +1,42 @@
+.narrow-menu-show { display: none; }
+@media (max-width: 767px) { /* @breakpoint-small */
+    .narrow-menu-hide { display: none; }
+    .narrow-menu-show { display: block; }
+}
+
+.jw-cardh, .jw-cardd, .jw-cards, .jw-cardc{
+    width: 32px;
+    height: 44px;
+    display: inline-block;
+    text-align: center;
+    border: #000 1px solid;
+    border-radius: 3px;
+    font-size: 20px;
+    color: #000;
+    margin-right: 4px;
+}
+
+.jw-cardh, .jw-cardd {
+    color: #f00;
+    border-color: #f00;
+}
+
+.jw-cardc::after {
+    content: '\2663';
+    font-size: 25px;
+}
+
+.jw-cardd::after {
+    content: '\2666';
+    font-size: 25px;
+}
+
+.jw-cardh::after {
+    content: '\2665';
+    font-size: 25px;
+}
+
+.jw-cards::after {
+    content: '\2660';
+    font-size: 25px;
+}

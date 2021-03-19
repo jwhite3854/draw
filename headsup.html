@@ -5,24 +5,38 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="css/uikit.min.css" />
+        <link rel="stylesheet" href="css/style.css" />
         <script src="js/uikit.min.js"></script>
         <script src="js/uikit-icons.min.js"></script>
     </head>
     <body>
         <nav class="uk-navbar uk-navbar-container uk-margin">
-            <div class="uk-navbar-left">
+            <div class="uk-navbar-left uk-margin-left">
                 <ul class="uk-navbar-nav">
                     <li><a href="#">HOME</a></li>
                 </ul>
             </div>
-            <div class="uk-navbar-right">
-                <ul class="uk-navbar-nav">
+            <div class="uk-navbar-right uk-margin-right">
+                <ul class="uk-navbar-nav narrow-menu-hide">
                     <li><a href="best.html">Best Hands</a></li>
                     <li class="uk-active"><a href="headsup.html">Heads Up</a></li>
                     <li><a href="range.html">Ranges</a></li>
                 </ul>
-                <div>
-                    <a class="uk-navbar-toggle" uk-navbar-toggle-icon href="#"></a>
+                <div class="narrow-menu-show">
+                    <a class="uk-navbar-toggle uk-icon uk-navbar-toggle-icon" href="#" uk-navbar-toggle-icon="" aria-expanded="false">
+                        <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <rect y="9" width="20" height="2"></rect>
+                            <rect y="3" width="20" height="2"></rect>
+                            <rect y="15" width="20" height="2"></rect>
+                        </svg>
+                    </a>
+                    <div class="uk-navbar-dropdown" uk-drop="mode: hover; cls-drop: uk-navbar-dropdown;" >
+                        <ul class="uk-nav uk-nav-default">
+                            <li><a href="best.html">Best Hands</a></li>
+                            <li class="uk-active"><a href="headsup.html">Heads Up</a></li>
+                            <li><a href="range.html">Ranges</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -38,18 +52,16 @@
                             <td>Board</td>
                             <td>Winning Hand</td>
                             <td>Winner</td>
-                            <td>Hyp. Nuts</td>
                         </tr>
                     </thead>
                     <tbody></tbody>
                     <tbody style="display:none;">
                         <tr>
-                            <td>__t1__</td>
-                            <td>__t2__</td>
-                            <td>__t3__</td>
+                            <td>__t1__<input type="hidden" name="hand__id__" value="__t12__" /></td>
+                            <td>__t2__<input type="hidden" name="hand__id__" value="__t22__" /></td>
+                            <td>__t3__<input type="hidden" name="hand__id__" value="__t32__" /></td>
                             <td><input type="text" name="hand__id__" class="uk-input uk-form-width-small" /></td>
                             <td><input type="text" name="winner__id__" class="uk-input uk-form-width-xsmall" /></td>
-                            <td><input type="text" name="nuts__id__" class="uk-input uk-form-width-xsmall" /></td>
                         </tr>
                     </tbody>
                 </table>
@@ -58,15 +70,26 @@
         </div>
         <script src="js/main.js"></script>
         <script>
-            for (let i=0;i<20;i++) {
+            for (let i=0;i<3;i++) {
                 let hero = deal(2);
                 let vill = deal(2, hero);
                 let board = deal(5, vill.concat(hero));
                 let data = {
-                    "t1": hero.join(''),
-                    "t2": vill.join(''),
-                    "t3": board.join('')
+                    "t12": hero.join(''),
+                    "t22": vill.join(''),
+                    "t32": board.join('')
                 };
+
+                if (window.location.search === '?work') {
+                    data.t1 = hero.join('');
+                    data.t2 = vill.join('');
+                    data.t3 = board.join('');
+                } else {
+                    data.t1 = decorateCards(hero);
+                    data.t2 = decorateCards(vill);
+                    data.t3 = decorateCards(board);
+                }
+
                 addNextRow('board', i, data);
             }
         </script>
