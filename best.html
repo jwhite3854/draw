@@ -5,6 +5,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="css/uikit.min.css" />
+        <link rel="stylesheet" href="css/style.css" />
         <script src="js/uikit.min.js"></script>
         <script src="js/uikit-icons.min.js"></script>
     </head>
@@ -42,7 +43,7 @@
     
         <div class="uk-container uk-container-small uk-position-relative uk-margin-bottom">
             <div class="uk-card uk-card-default uk-card-body">
-                <h1 class="uk-card-title" style="font-size:18px">Best Hands</h1>     
+                <h1 class="uk-card-title" style="font-size:18px">Best Hands</h1>
                 <table id="board" class="uk-table uk-table-striped uk-table-small uk-table-responsive">
                     <thead>
                         <tr>
@@ -54,7 +55,7 @@
                     <tbody></tbody>
                     <tbody style="display:none;">
                         <tr>
-                            <td>__t1__</td>
+                            <td>__t1__<input type="hidden" name="hand__id__" value="__t2__" /></td>
                             <td><input type="text" name="best__id__" class="uk-input" /></td>
                             <td><input type="text" name="sec__id__" class="uk-input" /></td>
                         </tr>
@@ -65,10 +66,20 @@
         </div>
         <script src="js/main.js"></script>
         <script>
-            for (let i=0;i<20;i++) {
+            for (let i=0;i<3;i++) {
                 let board = deal(5);
-                addNextRow('board', i, {"t1": board.join('')});
+                let data = {
+                    "t2": board.join('')
+                };
+                if (window.location.search === '?work') {
+                    data.t1 = board.join('');
+                } else {
+                    data.t1 = decorateCards(board);
+                }
+                addNextRow('board', i, data);
             }
+
+            console.log(window.location);
         </script>
     </body>
 </html>
