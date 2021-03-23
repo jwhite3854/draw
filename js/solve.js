@@ -22,10 +22,10 @@ class Card {
 }
 
 class Hand {
-    constructor(cards, best = '') {
+    constructor(cardsPool, best = '') {
 
         this.cards = [];
-        this.cardsPool = cards.sort(Card.sort);
+        this.cardsPool = cardsPool.sort(Card.sort);
         this.suits = {};
         this.values = [];
         
@@ -129,8 +129,8 @@ class Hand {
 
 
 class StraightFlush extends Hand {
-    constructor(cards) {
-        super(cards, 'Straight Flush');
+    constructor(cardsPool) {
+        super(cardsPool, 'Straight Flush');
     }
   
     solve() {
@@ -160,41 +160,42 @@ class StraightFlush extends Hand {
 }
 
 class FourOfAKind extends Hand {
-    constructor(cards) {
-      super(cards, 'Four of a Kind');
+    constructor(cardsPool) {
+      super(cardsPool, 'Four of a Kind');
     }
 
     solve() {
-        let cards = [];
         for (let i = 0; i < this.values.length; i++) {
             if (this.getNumCardsByRank(i) === 4) {
-                cards = this.values[i] || [];        
-                cards = cards.concat(this.nextHighest().slice(0,1));
+                this.cards = this.values[i] || [];        
+                this.cards = this.cards.concat(this.nextHighest().slice(0,1));
                 break;
             }
         }
 
-        return (cards.length >= 4);
+        return (this.cards.length >= 4);
     }
 }
 
 class FullHouse extends Hand {
-    constructor(cards) {
-        super(cards, 'Full House');
+    constructor(cardsPool) {
+        super(cardsPool, 'Full House');
     }
 
     solve() {
 
+        let bigSet = 0;
         for (let i = 0; i < this.values.length; i++) {
             if (this.getNumCardsByRank(i) === 3) {
                 this.cards = this.values[i] || [];
+                bigSet = i;
                 break;
             }
         }
     
         if (this.cards.length === 3) {
             for (let i = 0; i < this.values.length; i++) {
-                if (this.getNumCardsByRank(i) >= 2) {
+                if (this.getNumCardsByRank(i) >= 2 && i !== bigSet) {
                     this.cards = this.cards.concat(this.values[i] || []);
                     break;
                 }
@@ -206,8 +207,8 @@ class FullHouse extends Hand {
 }
 
 class Flush extends Hand {
-    constructor(cards) {
-        super(cards, 'Flush');
+    constructor(cardsPool) {
+        super(cardsPool, 'Flush');
     }
 
     solve() {
@@ -233,8 +234,8 @@ class Flush extends Hand {
 }
 
 class Straight extends Hand {
-    constructor(cards) {
-      super(cards, 'Straight');
+    constructor(cardsPool) {
+      super(cardsPool, 'Straight');
     }
 
     solve() {
@@ -351,8 +352,8 @@ class Straight extends Hand {
 }
 
 class ThreeOfAKind extends Hand {
-    constructor(cards) {
-        super(cards, 'Three of a Kind');
+    constructor(cardsPool) {
+        super(cardsPool, 'Three of a Kind');
     }
 
     solve() {
@@ -369,8 +370,8 @@ class ThreeOfAKind extends Hand {
 }
 
 class TwoPair extends Hand {
-    constructor(cards) {
-        super(cards, 'Two Pair');
+    constructor(cardsPool) {
+        super(cardsPool, 'Two Pair');
     }
 
     solve() {
@@ -390,17 +391,14 @@ class TwoPair extends Hand {
 }
 
 class OnePair extends Hand {
-    constructor(cards) {
-      super(cards, 'One Pair');
+    constructor(cardsPool) {
+      super(cardsPool, 'One Pair');
     }
 
     solve() {
         for (let i = 0; i < this.values.length; i++) {
             if (this.getNumCardsByRank(i) === 2) {
                 this.cards = this.cards.concat(this.values[i] || []);
-
-                console.log(this.nextHighest());
-
                 this.cards = this.cards.concat(this.nextHighest().slice(0, 5));
                 break;
             }
@@ -411,8 +409,8 @@ class OnePair extends Hand {
 }
 
 class HighCard extends Hand {
-    constructor(cards) {
-        super(cards, 'High Card');
+    constructor(cardsPool) {
+        super(cardsPool, 'High Card');
     }
 
     solve() {

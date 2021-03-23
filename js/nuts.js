@@ -118,32 +118,135 @@ class Tile {
     }
 }
 
+class RangeNuts {
+    constructor(rangeString, boardString){
+        this.ranges = rangeString.split(',');
+        this.board = boardString.match(/.{2}/g);
+        this.cardsPoolSets = [];
 
+        this.numbers = ['A','K','Q','J','T','9','8','7','6','5','4','3','2'];
+        this.suits = ['s','h','d','c'];
+
+        this.handRankings = [
+         //   'Straight Flush', 
+            'Four of a Kind', 
+            'Full House', 
+            'Flush', 
+            'Straight', 
+            'Three of a Kind', 
+            'Two Pair', 
+            'One Pair', 
+            'High Card'
+        ];
+
+        this.addRanges();
+
+    }
+
+    addRanges() {
+
+        let rangeHands = [];
+
+        for(let i = 0; i < this.ranges.length; i++){
+            let hole1 = this.ranges[i][0];
+            let hole2 = this.ranges[i][1];
+
+            if ( this.ranges[i].length === 2) {
+                for (let j = 0; j < (this.suits.length - 1); j++) {
+                    for (let k = (j + 1); k < this.suits.length; k++) {
+                        rangeHands.push(hole1+this.suits[j]+hole2+this.suits[k]);
+                    }
+                }
+            } else if ( this.ranges[i][2] === 's' ) {
+                for (let j = 0; j < this.suits.length; j++) {
+                    for (let k = 0; k < this.suits.length; k++) {
+                        if (k === j) {
+                            rangeHands.push(hole1+this.suits[j]+hole2+this.suits[k]);
+                        }
+                    }
+                }
+            } else if ( this.ranges[i][2] === 'o' ) {
+                for (let j = 0; j < this.suits.length; j++) {
+                    for (let k = 0; k < this.suits.length; k++) {
+                        if (k !== j) {
+                            rangeHands.push(hole1+this.suits[j]+hole2+this.suits[k]);
+                        }
+                    }
+                }
+            }
+        }
+
+        for (let i = 0; i < rangeHands.length; i++) {
+            let cards = rangeHands[i].match(/.{2}/g);
+            if (!this.inBoard(cards)) {
+                this.cardsPoolSets.push(rangeHands[i]);
+            }
+        }
+    }
+
+    inBoard(cards) {
+        return this.board.filter(Set.prototype.has, new Set(cards)).length > 0;
+    }
+
+    findNuts() {
+        
+        let winners = []
+        for (let i = 0; i < this.cardsPoolSets.length; i++) {
+            let boardAndHoles = this.board.join('') + this.cardsPoolSets[i];
+            let table = new CommTable(boardAndHoles);
+            table.evaluate();
+            winners.push([table.best, table.cards[0].rank, this.cardsPoolSets[i]]);
+        }
+
+        let bestHands = [];
+        let bestRankingIdx = 0;
+        let bestValue = 0;
+        outer_loop:
+        for (let i = 0; i < this.handRankings.length; i++) {
+            for (let j = 0; j < winners.length; j++) {
+                
+                if ( this.handRankings[i] === winners[j][0] ) {
+                    if ( bestValue > winners[j][1] ) {
+                        break outer_loop;
+                    }
+                    
+                    bestValue = winners[j][1];
+                    bestHands.push(winners[j][2]);
+                    bestRankingIdx = i;
+                }
+            }
+        }
+
+        console.log(bestHands);
+        console.log(this.handRankings[bestRankingIdx]);
+    }
+
+}
 
 class CommTable {
     constructor(board){
-        this.board = [];
+        this.board = board.match(/.{2}/g);
         this.best = '?';
+        this.cardsPool = [];
         
-        let cards = board.match(/.{2}/g);
-        for (let i = 0; i < cards.length; i++) {
-            let card = new Card(cards[i][0], cards[i][1]);
-            this.board.push(card);
+        for (let i = 0; i < this.board.length; i++) {
+            let card = new Card(this.board[i][0], this.board[i][1]);
+            this.cardsPool.push(card);
         }
     }
 
     evaluate() {
-        let hand = new Hand(this.board);
+        let hand = new Hand(this.cardsPool);
         this.best = hand.best;
         this.cards = hand.cards;
     }
 
     getResults() {
         let results = document.getElementById('results');
-        results.innerText = this.best;
+        results.innerHTML = this.best+ ' ';
 
         for (let i = 0; i < this.cards.length; i++) {
-            results.innerText += this.cards[i].value+this.cards[i].suit;
+            results.innerHTML += this.cards[i].value+this.cards[i].suit;
         }
     }
 }
