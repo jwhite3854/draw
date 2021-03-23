@@ -68,9 +68,10 @@
                 <h1 class="uk-card-title" style="font-size:18px">Nuts</h1>     
                 <div>
                     <input type="text" id="rangeInput" class="uk-input uk-form-width-large uk-margin" placeholder="Range" /> 
-                    <input type="text" id="boardInput" class="uk-input uk-form-width-small" placeholder="Board" /> 
+                    <input type="text" id="boardInput" class="uk-input uk-form-width-small" placeholder="Board" value="AsKsKdKcAd" /> 
                     <button class="uk-button uk-button-default" onclick="calculate();">Calc</button>
                 </div>
+                <div id="results"></div>
                 <table id="grid" class="uk-margin">
                     <tbody></tbody>
                 </table>
@@ -83,18 +84,21 @@
             let grid = new RangeGrid();
 
             let calculate = function() {
-                let range = document.getElementById('rangeInput').value;
+                //let range = document.getElementById('rangeInput').value;
                 let board = document.getElementById('boardInput').value;
 
-                grid.insertRange(range);
-                grid.decorateTable('grid');
+                //grid.insertRange(range);
+                //grid.decorateTable('grid');
+
+                let table = new CommTable(board);
+                table.evaluate();
+                table.getResults();
             }
 
             grid.decorateTable('grid');
 
 
-            let table = new CommTable('AsKsKdKcAd');
-            table.evaluate();
+            
         </script>
     </body>
 </html>

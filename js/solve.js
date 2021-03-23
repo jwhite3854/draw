@@ -22,7 +22,7 @@ class Card {
 }
 
 class Hand {
-    constructor(cards) {
+    constructor(cards, best = '') {
 
         this.cards = [];
         this.cardsPool = cards.sort(Card.sort);
@@ -30,14 +30,14 @@ class Hand {
         this.values = [];
         
         this.sfLength = 0;
-        this.sfQualify = 5;
+        this.best = best;
 
         this.handRankings = [
             StraightFlush, 
             FourOfAKind, 
             FullHouse, 
             Flush, 
-        //    Straight, 
+            Straight, 
             ThreeOfAKind, 
             TwoPair, 
             OnePair, 
@@ -96,9 +96,8 @@ class Hand {
      * @return {Array} Highest cards
      */
     nextHighest() {
-        let excluding = [];
-        excluding = excluding.concat(this.cards);
-        let picks = this.cards.filter(function(card) {
+        let excluding = this.cards;
+        let picks = this.cardsPool.filter(function(card) {
             if (excluding.indexOf(card) < 0) {
                 return true;
             }
@@ -118,6 +117,8 @@ class Hand {
             let evaluation = this.handRankings[i];
             result = new evaluation(this.cardsPool);
             if (result.isPossible) {
+                this.best = result.best;
+                this.cards = result.cards;
                 break;
             }
         }
@@ -129,7 +130,7 @@ class Hand {
 
 class StraightFlush extends Hand {
     constructor(cards) {
-        super(cards);
+        super(cards, 'Straight Flush');
     }
   
     solve() {
@@ -139,7 +140,7 @@ class StraightFlush extends Hand {
   
         for (let suit in this.suits) {
             cards = this.getCardsForFlush(suit);
-            if (cards && cards.length >= this.sfQualify) {
+            if (cards && cards.length >= 5) {
                 possibleStraight = cards;
                 break;
             } 
@@ -154,13 +155,13 @@ class StraightFlush extends Hand {
             }
         }
   
-        return (this.cards.length >= this.sfQualify);
+        return (this.cards.length >= 5);
     }
 }
 
 class FourOfAKind extends Hand {
     constructor(cards) {
-      super(cards);
+      super(cards, 'Four of a Kind');
     }
 
     solve() {
@@ -179,7 +180,7 @@ class FourOfAKind extends Hand {
 
 class FullHouse extends Hand {
     constructor(cards) {
-        super(cards);
+        super(cards, 'Full House');
     }
 
     solve() {
@@ -206,7 +207,7 @@ class FullHouse extends Hand {
 
 class Flush extends Hand {
     constructor(cards) {
-        super(cards);
+        super(cards, 'Flush');
     }
 
     solve() {
@@ -214,26 +215,26 @@ class Flush extends Hand {
 
         for (let suit in this.suits) {
             let cards = this.getCardsForFlush(suit);
-            if (cards.length >= this.sfQualify) {
+            if (cards.length >= 5) {
                 this.cards = cards;
                 break;
             }
         }
 
-        if (this.cards.length >= this.sfQualify) {
+        if (this.cards.length >= 5) {
             this.sfLength = this.cards.length;
             if (this.cards.length < 5) {
                 this.cards = this.cards.concat(this.nextHighest().slice(0, 5-this.cards.length));
             }
         }
 
-        return (this.cards.length >= this.sfQualify);
+        return (this.cards.length >= 5);
     }
 }
 
 class Straight extends Hand {
     constructor(cards) {
-      super(cards);
+      super(cards, 'Straight');
     }
 
     solve() {
@@ -257,7 +258,7 @@ class Straight extends Hand {
             this.cards = this.cards.sort(Card.sort);
 
           
-            this.sfLength = this.sfQualify;
+            this.sfLength = 5;
             if (this.cards[0].value === 'A') {
                 this.cards = this.cards.concat(this.nextHighest().slice(1, 5-this.cards.length+1));
             } else {
@@ -269,7 +270,7 @@ class Straight extends Hand {
         
         this.cards = this.getGaps();
 
-        if (this.cards.length >= this.game.sfQualify) {
+        if (this.cards.length >= 5) {
             this.cards = this.cards.slice(0, 5);
             this.sfLength = this.cards.length;
             if (this.cards.length < 5) {
@@ -281,36 +282,25 @@ class Straight extends Hand {
             }
         }
 
-        return this.cards.length >= this.sfQualify;
+        return this.cards.length >= 5;
     }
 
     /**
      * Get the number of gaps in the straight.
      * @return {Array} Highest potential straight with fewest number of gaps.
      */
-    getGaps(checkHandLength) {
-        let cardsToCheck, i, card, gapCards, cardsList, gapCount, prevCard, diff;
+    getGaps() {
+        let card, cardsList, gapCount, prevCard, diff;
 
-        for (let i = 0; i < cardsToCheck.length; i++) {
-            card = cardsToCheck[i];
-            if (card.wildValue === 'A') {
-                cardsToCheck.push(new Card('1' + card.suit));
-            }
-        }
-        cardsToCheck = cardsToCheck.sort(Card.sort);
+        let cardsToCheck = this.cardsPool;
 
-        if (checkHandLength) {
-            i = cardsToCheck[0].rank + 1;
-        } else {
-            checkHandLength = this.sfQualify;
-            i = values.length;
-        }
+        let checkHandLength = 5;
 
-        gapCards = [];
-        for (; i>0; i--) {
+        let gapCards = [];
+        for (let i = this.values.length; i > 0; i--) {
             cardsList = [];
             gapCount = 0;
-            for (let j=0; j<cardsToCheck.length; j++) {
+            for (let j = 0; j < cardsToCheck.length; j++) {
                 card = cardsToCheck[j];
                 if (card.rank > i) {
                     continue;
@@ -320,7 +310,7 @@ class Straight extends Hand {
 
                 if (diff === null) {
                     cardsList.push(card);
-                 } else if (checkHandLength < (gapCount + diff + cardsList.length)) {
+                } else if (checkHandLength < (gapCount + diff + cardsList.length)) {
                     break;
                 } else if (diff > 0) {
                     cardsList.push(card);
@@ -343,7 +333,7 @@ class Straight extends Hand {
         for (let i = 4; i>=0; i--) {
             cardFound = false;
             for (let j = 0; j < cardsPool.length; j++) {
-                card = cardPool[j];
+                card = cardsPool[j];
                 if (card.rank > i) {
                     continue;
                 }
@@ -362,7 +352,7 @@ class Straight extends Hand {
 
 class ThreeOfAKind extends Hand {
     constructor(cards) {
-        super(cards);
+        super(cards, 'Three of a Kind');
     }
 
     solve() {
@@ -380,7 +370,7 @@ class ThreeOfAKind extends Hand {
 
 class TwoPair extends Hand {
     constructor(cards) {
-        super(cards);
+        super(cards, 'Two Pair');
     }
 
     solve() {
@@ -401,13 +391,16 @@ class TwoPair extends Hand {
 
 class OnePair extends Hand {
     constructor(cards) {
-      super(cards);
+      super(cards, 'One Pair');
     }
 
     solve() {
         for (let i = 0; i < this.values.length; i++) {
             if (this.getNumCardsByRank(i) === 2) {
                 this.cards = this.cards.concat(this.values[i] || []);
+
+                console.log(this.nextHighest());
+
                 this.cards = this.cards.concat(this.nextHighest().slice(0, 5));
                 break;
             }
@@ -419,14 +412,11 @@ class OnePair extends Hand {
 
 class HighCard extends Hand {
     constructor(cards) {
-        super(cards);
+        super(cards, 'High Card');
     }
 
     solve() {
         this.cards = this.cardsPool.slice(0, 5);
-        for (let i = 0; i < this.cards.length; i++) {
-            let card = this.cards[i];
-        }
 
         return true;
     }

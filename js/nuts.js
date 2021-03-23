@@ -123,6 +123,7 @@ class Tile {
 class CommTable {
     constructor(board){
         this.board = [];
+        this.best = '?';
         
         let cards = board.match(/.{2}/g);
         for (let i = 0; i < cards.length; i++) {
@@ -133,6 +134,16 @@ class CommTable {
 
     evaluate() {
         let hand = new Hand(this.board);
-        console.log(hand.isPossible.constructor.name);
+        this.best = hand.best;
+        this.cards = hand.cards;
+    }
+
+    getResults() {
+        let results = document.getElementById('results');
+        results.innerText = this.best;
+
+        for (let i = 0; i < this.cards.length; i++) {
+            results.innerText += this.cards[i].value+this.cards[i].suit;
+        }
     }
 }
