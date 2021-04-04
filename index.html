@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Best Hands</title>
+        <title>Testing Tools</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="css/uikit.min.css" />
@@ -41,10 +41,89 @@
             </div>
         </nav>
     
-        <div class="uk-container uk-container-small uk-position-relative uk-margin-bottom">
-            <div class="uk-card uk-card-default uk-card-body">
-                <p>I don't know what to put here.</p>
+        <div class="uk-container uk-container-xsmall uk-position-relative uk-margin-bottom">
+            <div class="uk-card uk-card-default uk-card-body uk-padding-small">
+                <h1 class="uk-card-title" style="font-size:18px">Range Tester</h1>
+                <form class="uk-form-stacked">
+                    <div class="uk-margin">
+                        <div class="uk-form-controls">
+                            <select class="uk-select" id="rangeSelector">
+                                <option value="0">Select a Range</option>
+                                <option value="HJ">High Jack</option>
+                                <option value="CO">Cut Off</option>
+                                <option value="BTN">Button</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+
+                <table id="board" class="uk-table uk-table-striped uk-table-small">
+                    <thead>
+                        <tr>
+                            <td width="80">Hole</td>
+                            <td>Action</td>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tbody style="display:none;">
+                        <tr class="">
+                            <td>__t1__<input type="hidden" id="hand__id__" value="__t2__" /></td>
+                            <td>
+                                <div class="uk-form-controls rangeRow">
+                                    <label><input class="uk-radio" type="radio" name="best__id__" value="OR"> OR</label>
+                                    <label><input class="uk-radio" type="radio" name="best__id__" value="T"> T</label>
+                                    <label><input class="uk-radio" type="radio" name="best__id__" value="VT"> VT</label>
+                                    <label><input class="uk-radio" type="radio" name="best__id__" value="F"> F</label>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
+        <script src="js/main.js"></script>
+        <script>
+            function generateList(range) {
+                clearBoard('board');
+                if (range !== "0") {
+                    for (let i=0;i<25;i++) {
+                        let board = deal(2);
+                        let data = {
+                            "t2": parseHoleCombo(board.join(''))
+                        };
+                        if (window.location.search === '?work') {
+                            data.t1 = board.join('');
+                        } else {
+                            data.t1 = decorateCards(board);
+                        }
+                        addNextRow('board', i, data);
+                    }
+                }
+                
+            }
+
+            getCSVContents('data/ranges.csv');
+
+            let rangeSelector = document.getElementById('rangeSelector');
+            rangeSelector.addEventListener("change", event => {
+                generateList(rangeSelector.value);
+                let rangeRows = document.getElementsByClassName("rangeRow");
+                for (let i = 0; i < rangeRows.length; i++) {
+                    let options = rangeRows[i].getElementsByTagName("input");
+                    [].slice.call(options).forEach((element, index) => {
+                        element.addEventListener('click', (event) => {
+                            let id = element.name.replace('best', 'hand');
+                            let combo = document.getElementById(id).value;
+                            let answer = rangeResults[rangeSelector.value][combo];
+                            if (answer === element.value) {
+                                rangeRows[i].className = 'uk-form-controls rangeRow uk-form-success ';
+                            } else {
+                                rangeRows[i].className = 'uk-form-controls rangeRow uk-form-danger ';
+                            }
+                        });
+                    });
+                }
+            });
+        </script>
     </body>
 </html>

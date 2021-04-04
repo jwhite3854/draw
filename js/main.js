@@ -1,5 +1,6 @@
 let numbers = ['2','3','4','5','6','7','8','9','T','J','Q','K','A'];
 let suits = ['s','h','d','c'];
+let rangeResults = [];
 
 let deal = function(size, dealt = []) {
     let hand = [];
@@ -14,6 +15,32 @@ let deal = function(size, dealt = []) {
     }
             
     return hand;
+}
+
+let parseHoleCombo = function(hole) {
+    let card1Value = hole[0];
+    let card1Suit = hole[1];
+    let card2Value = hole[2];
+    let card2Suit = hole[3];
+
+    if (card1Value === card2Value) {
+        return card1Value + card1Value;
+    } else if ( card1Suit === card2Suit ) {
+        return orderCards(card1Value, card2Value) + 's';
+    } else {
+        return orderCards(card1Value, card2Value) + 'o';
+    }
+}
+
+let orderCards = function(card1Value, card2Value) {
+    let card1ValueIdx = numbers.indexOf(card1Value);
+    let card2ValueIdx = numbers.indexOf(card2Value);
+
+    if (card1ValueIdx < card2ValueIdx) {
+        return card2Value + card1Value;
+    } else {
+        return card1Value + card2Value
+    }
 }
 
 let decorateCards = function(cards) {
@@ -36,6 +63,11 @@ let addNextRow = function(table_id, row_id, row_data = {}) {
 
     newRow = newRow.replace(/__id__/g, row_id);
     table.tBodies.item(0).innerHTML += newRow;
+}
+
+let clearBoard = function(table_id) {
+    let table = document.getElementById(table_id);
+    table.tBodies.item(0).innerHTML = '';
 }
 
 let generateCSVString = function(table_id) {
@@ -69,4 +101,44 @@ let downloadCSV = function(table_id) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+}
+
+async function printCont(text) {
+    const a = await text;
+    
+    let textLines = a.split(/\r\n|\n/);
+    let combos = textLines[0].split(',');
+
+    for (let i = 1; i < textLines.length; i++) {
+        let cells = textLines[i].split(',');
+        let range = [];
+        for (let j = 1; j < cells.length; j++) {
+            range[combos[j]] = cells[j];
+        }
+        rangeResults[cells[0]] = range;
+    }
+}
+
+async function getCSVContents(filePath) {
+
+    let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'text/csv');
+
+    const myInit = {
+        method: 'GET',
+        headers: myHeaders,
+        mode: 'cors',
+        cache: 'default'
+    };
+
+    let myRequest = new Request(filePath);
+
+    let text = await fetch(myRequest, myInit)
+        .then((response) => response.text())
+        .then((responseText) => {
+            return responseText;
+        });
+
+
+    return printCont(text);
 }

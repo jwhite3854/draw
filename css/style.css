@@ -40,3 +40,11 @@
     content: '\2660';
     font-size: 25px;
 }
+
+.uk-radio {
+    margin-left: 12px;
+}
+
+label:nth-child(1) > input.uk-radio {
+    margin-left: 0;
+}
