@@ -42,7 +42,7 @@
         </nav>
     
         <div class="uk-container uk-container-xsmall uk-position-relative uk-margin-bottom">
-            <div class="uk-card uk-card-default uk-card-body uk-padding-small">
+            <div id="board-card" class="uk-card uk-card-default uk-card-body uk-padding-small">
                 <h1 class="uk-card-title" style="font-size:18px">Range Tester</h1>
                 <form class="uk-form-stacked">
                     <div class="uk-margin">
@@ -85,6 +85,12 @@
         <script>
             function generateList(range) {
                 clearBoard('board');
+                let reset = document.getElementById('reset-test');
+                if (reset !== null) {
+                    window.scrollTo(0, 0);
+                    reset.remove();
+                }
+
                 if (range !== "0") {
                     for (let i=0;i<25;i++) {
                         let board = deal(2);
@@ -99,14 +105,7 @@
                         addNextRow('board', i, data);
                     }
                 }
-                
-            }
 
-            getCSVContents('data/ranges.csv');
-
-            let rangeSelector = document.getElementById('rangeSelector');
-            rangeSelector.addEventListener("change", event => {
-                generateList(rangeSelector.value);
                 let rangeRows = document.getElementsByClassName("rangeRow");
                 for (let i = 0; i < rangeRows.length; i++) {
                     let options = rangeRows[i].getElementsByTagName("input");
@@ -123,6 +122,23 @@
                         });
                     });
                 }
+
+                let button = document.createElement("a");
+                button.className = 'uk-button uk-button-primary uk-align-right';
+                button.setAttribute('id', 'reset-test');
+                button.setAttribute('href', '#');
+                button.setAttribute('onclick', 'event.preventDefault();generateList(\''+range+'\')');
+                button.innerText = "Again!";
+
+                let card = document.getElementById('board-card');
+                card.append(button);
+            }
+
+            getCSVContents('data/ranges.csv');
+
+            let rangeSelector = document.getElementById('rangeSelector');
+            rangeSelector.addEventListener("change", event => {
+                generateList(rangeSelector.value);
             });
         </script>
     </body>
