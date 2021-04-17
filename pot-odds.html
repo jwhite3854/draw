@@ -63,9 +63,11 @@
             let betMax = 5;
 
             for (let i = 0; i < 25; i++) {
+                let pot = Math.ceil(Math.random() * potMax) * 5;
+                let toCall = Math.ceil(Math.random() * betMax) * 5;
                 let data = {
-                    "t1": Math.ceil(Math.random() * potMax) * 5,
-                    "t2": Math.ceil(Math.random() * betMax) * 5
+                    "t1": (pot + toCall),
+                    "t2": toCall
                 };
 
                 addNextRow('board', i, data);
@@ -73,7 +75,7 @@
 
             function checkOdds(input, pot, bet) {
                 if ( input.value !== '' ) {
-                    let answer = Math.floor((bet/(pot+(2*bet))*100));
+                    let answer = Math.floor((bet/(pot+bet)*100));
                     if (answer == input.value) {
                         input.className = 'uk-input uk-form-width-small rangeRow uk-form-success ';
                     } else {
