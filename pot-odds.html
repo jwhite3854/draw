@@ -49,18 +49,9 @@
                 <tbody></tbody>
                 <tbody style="display:none;">
                     <tr>
-                        <td>__t1__<input type="hidden" name="pot__id__" value="__t1__" /></td>
-                        <td>__t2__<input type="hidden" name="bet__id__" value="__t2__" /></td>
-                        <td>
-                            <input type="number" id="odds__id__" class="uk-input uk-form-width-small" />
-                            <button 
-                                id="check__id__" 
-                                class="uk-button uk-button-primary uk-border-circle uk-button-small" 
-                                uk-icon="check" 
-                                style="padding: 0 4px"
-                                onclick="checkOdds(__id__, __t1__, __t2__);"
-                                ></button>
-                        </td>
+                        <td><input type="text" class="uk-input uk-form-width-xsmall uk-form-blank" name="pot__id__" value="__t1__" /></td>
+                        <td><input type="text" class="uk-input uk-form-width-xsmall uk-form-blank" name="bet__id__" value="__t2__" /></td>
+                        <td><input type="tel" id="odds__id__" class="uk-input uk-form-width-small" onblur="checkOdds(this,__t1__,__t2__)" /></td>
                     </tr>
                 </tbody>
             </table>
@@ -71,28 +62,21 @@
             let potMax = 10;
             let betMax = 5;
 
-            for (let i=0;i<3;i++) {
-                let pot = Math.ceil(Math.random() * potMax) * 5;
-                let bet = Math.ceil(Math.random() * betMax) * 5;
-
+            for (let i = 0; i < 25; i++) {
                 let data = {
-                    "t1": pot,
-                    "t2": bet
+                    "t1": Math.ceil(Math.random() * potMax) * 5,
+                    "t2": Math.ceil(Math.random() * betMax) * 5
                 };
 
-                let answer = Math.floor((bet/(pot+(2*bet))*100));
-                console.log(answer);
-    
                 addNextRow('board', i, data);
             }
 
-            function checkOdds(i, pot, bet) {
+            function checkOdds(input, pot, bet) {
                 let answer = Math.floor((bet/(pot+(2*bet))*100));
-                let oddsDom = document.getElementById('odds'+i);
-                if (answer == oddsDom.value) {
-                    oddsDom.className = 'uk-input uk-form-width-small rangeRow uk-form-success ';
+                if (answer == input.value) {
+                    input.className = 'uk-input uk-form-width-small rangeRow uk-form-success ';
                 } else {
-                    oddsDom.className = 'uk-input uk-form-width-small rangeRow uk-form-danger ';
+                    input.className = 'uk-input uk-form-width-small rangeRow uk-form-danger ';
                 }
             }
         </script>
