@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Testing Tools</title>
+        <title>Home | JWPM Tools</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="css/uikit.min.css" />
@@ -17,129 +17,30 @@
                 </ul>
             </div>
             <div class="uk-navbar-right uk-margin-right">
-                <ul class="uk-navbar-nav narrow-menu-hide">
-                    <li><a href="best.html">Best Hands</a></li>
-                    <li><a href="headsup.html">Heads Up</a></li>
-                    <li><a href="range.html">Ranges</a></li>
-                </ul>
-                <div class="narrow-menu-show">
-                    <a class="uk-navbar-toggle uk-icon uk-navbar-toggle-icon" href="#" uk-navbar-toggle-icon="" aria-expanded="false">
-                        <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <rect y="9" width="20" height="2"></rect>
-                            <rect y="3" width="20" height="2"></rect>
-                            <rect y="15" width="20" height="2"></rect>
-                        </svg>
-                    </a>
-                    <div class="uk-navbar-dropdown" uk-drop="mode: hover; cls-drop: uk-navbar-dropdown;" >
-                        <ul class="uk-nav uk-nav-default">
-                            <li><a href="best.html">Best Hands</a></li>
-                            <li><a href="headsup.html">Heads Up</a></li>
-                            <li><a href="range.html">Ranges</a></li>
-                        </ul>
-                    </div>
+                <a class="uk-navbar-toggle uk-icon uk-navbar-toggle-icon" href="#" uk-navbar-toggle-icon="" aria-expanded="false">
+                    <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <rect y="9" width="20" height="2"></rect>
+                        <rect y="3" width="20" height="2"></rect>
+                        <rect y="15" width="20" height="2"></rect>
+                    </svg>
+                </a>
+                <div class="uk-navbar-dropdown" uk-drop="mode: hover; cls-drop: uk-navbar-dropdown;" >
+                    <ul class="uk-nav uk-nav-default">
+                        <li><a href="best.html">Best Hands</a></li>
+                        <li><a href="headsup.html">Heads Up</a></li>
+                        <li><a href="charts.html">Charts</a></li>
+                        <li><a href="pot-odds.html">Pot Odds</a></li>
+                        <li><a href="range.html">Ranges</a></li>
+                    </ul>
                 </div>
             </div>
         </nav>
     
         <div class="uk-container uk-container-xsmall uk-position-relative uk-margin-bottom">
             <div id="board-card" class="uk-card uk-card-default uk-card-body uk-padding-small">
-                <h1 class="uk-card-title" style="font-size:18px">Range Tester</h1>
-                <form class="uk-form-stacked">
-                    <div class="uk-margin">
-                        <div class="uk-form-controls">
-                            <select class="uk-select" id="rangeSelector">
-                                <option value="0">Select a Range</option>
-                                <option value="HJ">High Jack</option>
-                                <option value="CO">Cut Off</option>
-                                <option value="BTN">Button</option>
-                            </select>
-                        </div>
-                    </div>
-                </form>
-
-                <table id="board" class="uk-table uk-table-striped uk-table-small">
-                    <thead>
-                        <tr>
-                            <td width="80">Hole</td>
-                            <td>Action</td>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                    <tbody style="display:none;">
-                        <tr class="">
-                            <td>__t1__<input type="hidden" id="hand__id__" value="__t2__" /></td>
-                            <td>
-                                <div class="uk-form-controls rangeRow">
-                                    <label><input class="uk-radio" type="radio" name="best__id__" value="OR"> OR</label>
-                                    <label><input class="uk-radio" type="radio" name="best__id__" value="T"> T</label>
-                                    <label><input class="uk-radio" type="radio" name="best__id__" value="VT"> VT</label>
-                                    <label><input class="uk-radio" type="radio" name="best__id__" value="F"> F</label>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <h1 class="uk-card-title" style="font-size:18px">JWPM Tools</h1>
+                
             </div>
         </div>
-        <script src="js/main.js"></script>
-        <script>
-            function generateList(range) {
-                clearBoard('board');
-                let reset = document.getElementById('reset-test');
-                if (reset !== null) {
-                    window.scrollTo(0, 0);
-                    reset.remove();
-                }
-
-                if (range !== "0") {
-                    for (let i=0;i<25;i++) {
-                        let board = deal(2);
-                        let data = {
-                            "t2": parseHoleCombo(board.join(''))
-                        };
-                        if (window.location.search === '?work') {
-                            data.t1 = board.join('');
-                        } else {
-                            data.t1 = decorateCards(board);
-                        }
-                        addNextRow('board', i, data);
-                    }
-                }
-
-                let rangeRows = document.getElementsByClassName("rangeRow");
-                for (let i = 0; i < rangeRows.length; i++) {
-                    let options = rangeRows[i].getElementsByTagName("input");
-                    [].slice.call(options).forEach((element, index) => {
-                        element.addEventListener('click', (event) => {
-                            let id = element.name.replace('best', 'hand');
-                            let combo = document.getElementById(id).value;
-                            let answer = rangeResults[rangeSelector.value][combo];
-                            if (answer === element.value) {
-                                rangeRows[i].className = 'uk-form-controls rangeRow uk-form-success ';
-                            } else {
-                                rangeRows[i].className = 'uk-form-controls rangeRow uk-form-danger ';
-                            }
-                        });
-                    });
-                }
-
-                let button = document.createElement("a");
-                button.className = 'uk-button uk-button-primary uk-align-right';
-                button.setAttribute('id', 'reset-test');
-                button.setAttribute('href', '#');
-                button.setAttribute('onclick', 'event.preventDefault();generateList(\''+range+'\')');
-                button.innerText = "Again!";
-
-                let card = document.getElementById('board-card');
-                card.append(button);
-            }
-
-            getCSVContents('data/ranges.csv');
-
-            let rangeSelector = document.getElementById('rangeSelector');
-            rangeSelector.addEventListener("change", event => {
-                generateList(rangeSelector.value);
-            });
-        </script>
     </body>
 </html>

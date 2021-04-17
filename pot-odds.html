@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Pot Odds | JPM Tools</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/uikit.min.css" />
+        <link rel="stylesheet" href="css/style.css" />
+        <script src="js/uikit.min.js"></script>
+        <script src="js/uikit-icons.min.js"></script>
+    </head>
+    <body>
+        <nav class="uk-navbar uk-navbar-container uk-margin">
+            <div class="uk-navbar-left uk-margin-left">
+                <ul class="uk-navbar-nav">
+                    <li><a href="#">HOME</a></li>
+                </ul>
+            </div>
+            <div class="uk-navbar-right uk-margin-right">
+                <a class="uk-navbar-toggle uk-icon uk-navbar-toggle-icon" href="#" uk-navbar-toggle-icon="" aria-expanded="false">
+                    <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <rect y="9" width="20" height="2"></rect>
+                        <rect y="3" width="20" height="2"></rect>
+                        <rect y="15" width="20" height="2"></rect>
+                    </svg>
+                </a>
+                <div class="uk-navbar-dropdown" uk-drop="mode: hover; cls-drop: uk-navbar-dropdown;" >
+                    <ul class="uk-nav uk-nav-default">
+                        <li><a href="best.html">Best Hands</a></li>
+                        <li><a href="headsup.html">Heads Up</a></li>
+                        <li><a href="charts.html">Charts</a></li>
+                        <li><a href="pot-odds.html" class="uk-active">Pot Odds</a></li>
+                        <li><a href="range.html">Ranges</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    
+        <div class="uk-container uk-container-small uk-position-relative uk-margin-bottom">
+            <h1 class="uk-card-title" style="font-size:18px">Pot Odds</h1>
+            <table id="board" class="uk-table uk-table-striped uk-table-small">
+                <thead>
+                    <tr>
+                        <td>Pot</td>
+                        <td>Raise</td>
+                        <td>Pot Odds</td>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+                <tbody style="display:none;">
+                    <tr>
+                        <td>__t1__<input type="hidden" name="pot__id__" value="__t1__" /></td>
+                        <td>__t2__<input type="hidden" name="bet__id__" value="__t2__" /></td>
+                        <td>
+                            <input type="number" id="odds__id__" class="uk-input uk-form-width-small" />
+                            <button 
+                                id="check__id__" 
+                                class="uk-button uk-button-primary uk-border-circle uk-button-small" 
+                                uk-icon="check" 
+                                style="padding: 0 4px"
+                                onclick="checkOdds(__id__, __t1__, __t2__);"
+                                ></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <script src="js/main.js"></script>
+        <script>
+            let potMax = 10;
+            let betMax = 5;
+
+            for (let i=0;i<3;i++) {
+                let pot = Math.ceil(Math.random() * potMax) * 5;
+                let bet = Math.ceil(Math.random() * betMax) * 5;
+
+                let data = {
+                    "t1": pot,
+                    "t2": bet
+                };
+
+                let answer = Math.floor((bet/(pot+(2*bet))*100));
+                console.log(answer);
+    
+                addNextRow('board', i, data);
+            }
+
+            function checkOdds(i, pot, bet) {
+                let answer = Math.floor((bet/(pot+(2*bet))*100));
+                let oddsDom = document.getElementById('odds'+i);
+                if (answer == oddsDom.value) {
+                    oddsDom.className = 'uk-input uk-form-width-small rangeRow uk-form-success ';
+                } else {
+                    oddsDom.className = 'uk-input uk-form-width-small rangeRow uk-form-danger ';
+                }
+            }
+        </script>
+    </body>
+</html>

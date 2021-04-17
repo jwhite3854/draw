@@ -195,16 +195,21 @@ class RangeNuts {
             let boardAndHoles = this.board.join('') + this.cardsPoolSets[i];
             let table = new CommTable(boardAndHoles);
             table.evaluate();
-            winners.push([table.best, table.cards[0].rank, this.cardsPoolSets[i]]);
+            winners.push([table.best, table.cards[0].rank, this.cardsPoolSets[i]], table.cards);
         }
 
         let bestHands = [];
         let bestRankingIdx = 0;
         let bestValue = 0;
+        let doBreak = false;
+        let hands = [];
+
         outer_loop:
         for (let i = 0; i < this.handRankings.length; i++) {
+            if (doBreak) {
+                break;
+            }
             for (let j = 0; j < winners.length; j++) {
-                
                 if ( this.handRankings[i] === winners[j][0] ) {
                     if ( bestValue > winners[j][1] ) {
                         break outer_loop;
@@ -213,14 +218,13 @@ class RangeNuts {
                     bestValue = winners[j][1];
                     bestHands.push(winners[j][2]);
                     bestRankingIdx = i;
+                    hands.push(winners[j][3]);
+
+                    doBreak = true;
                 }
             }
         }
-
-        console.log(bestHands);
-        console.log(this.handRankings[bestRankingIdx]);
     }
-
 }
 
 class CommTable {

@@ -58,7 +58,8 @@ let addNextRow = function(table_id, row_id, row_data = {}) {
     let newRow = table.tBodies.item(1).innerHTML;
 
     for (const [key, value] of Object.entries(row_data)) {
-        newRow = newRow.replace("__"+key+"__", value);
+        let regex = new RegExp("__"+key+"__", "g");
+        newRow = newRow.replace(regex, value);
     }
 
     newRow = newRow.replace(/__id__/g, row_id);
