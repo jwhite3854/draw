@@ -76,20 +76,36 @@
                         </tr>
                     </tbody>
                 </table>
+                <div id="results" hidden>
+                    <hr/>
+                    OR: <span id="OR_res" class="resper">0</span>% | 
+                    T: <span id="T_res" class="resper">0</span>% | 
+                    VT: <span id="VT_res" class="resper">0</span>% | 
+                    F: <span id="F_res" class="resper">0</span>%
+                    <button class="uk-button uk-button-primary uk-button-small uk-align-right" onclick="checkPercentages()" style="padding:0 10px;">%</button>
+                    <hr/>              
+                </div>
+                
+                <div id="repeat" hidden>
+                    
+                    <button class="uk-button uk-button-primary uk-align-right" onclick="generateList(true)">Again!</button>
+                </div>
             </div>
         </div>
         <script src="js/main.js"></script>
         <script>
-            function generateList(range) {
+            function generateList(totop = false) {
                 clearBoard('board');
-                let reset = document.getElementById('reset-test');
-                if (reset !== null) {
+                if (totop) {
                     window.scrollTo(0, 0);
-                    reset.remove();
                 }
 
+                let range = document.getElementById('rangeSelector').value;
+                let results = document.getElementById("results");
+                let repeat = document.getElementById("repeat");
+        
                 if (range !== "0") {
-                    for (let i=0;i<25;i++) {
+                    for (let i=0;i<2;i++) {
                         let board = deal(2);
                         let data = {
                             "t2": parseHoleCombo(board.join(''))
@@ -101,6 +117,11 @@
                         }
                         addNextRow('board', i, data);
                     }
+                    results.removeAttribute("hidden");
+                    repeat.removeAttribute("hidden");
+                } else {
+                    results.setAttribute("hidden", "true");
+                    repeat.setAttribute("hidden", "true");
                 }
 
                 let rangeRows = document.getElementsByClassName("rangeRow");
@@ -120,22 +141,40 @@
                     });
                 }
 
-                let button = document.createElement("a");
-                button.className = 'uk-button uk-button-primary uk-align-right';
-                button.setAttribute('id', 'reset-test');
-                button.setAttribute('href', '#');
-                button.setAttribute('onclick', 'event.preventDefault();generateList(\''+range+'\')');
-                button.innerText = "Again!";
+                let resper = document.getElementsByClassName("resper");
+                for (let i = 0; i < resper.length; i++) {
+                    resper[i].innerText = '0';
+                }
+            }
 
-                let card = document.getElementById('board-card');
-                card.append(button);
+            function checkPercentages() {
+                let rangeRows = document.getElementsByClassName("rangeRow");
+                let results = [];
+                results["OR"] = [];
+                results["T"] = [];
+                results["VT"] = [];
+                results["F"] = [];
+            
+                for (let i = 0; i < rangeRows.length; i++) {
+                    let options = document.getElementsByName('best'+i);
+                    for (let option of options) {
+                        if (option.checked) {
+                            results[option.value].push(1);
+                        }
+                    }
+                }
+
+                for (let key in results) {
+                    let count = results[key].length;
+                    let resper = document.getElementById(key+"_res").innerText = Math.round( count * 100 / (rangeRows.length - 1)); 
+                }
             }
 
             getCSVContents('data/ranges.csv');
 
             let rangeSelector = document.getElementById('rangeSelector');
             rangeSelector.addEventListener("change", event => {
-                generateList(rangeSelector.value);
+                generateList();
             });
         </script>
     </body>
