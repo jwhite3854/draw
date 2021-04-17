@@ -49,8 +49,8 @@
                 <tbody></tbody>
                 <tbody style="display:none;">
                     <tr>
-                        <td><input type="text" class="uk-input uk-form-width-xsmall uk-form-blank" name="pot__id__" value="__t1__" /></td>
-                        <td><input type="text" class="uk-input uk-form-width-xsmall uk-form-blank" name="bet__id__" value="__t2__" /></td>
+                        <td><input type="text" class="uk-input uk-form-width-xsmall uk-form-blank" tabindex="-1" name="pot__id__" value="__t1__" /></td>
+                        <td><input type="text" class="uk-input uk-form-width-xsmall uk-form-blank" tabindex="-1" name="bet__id__" value="__t2__" /></td>
                         <td><input type="tel" id="odds__id__" class="uk-input uk-form-width-small" onblur="checkOdds(this,__t1__,__t2__)" /></td>
                     </tr>
                 </tbody>
@@ -72,11 +72,13 @@
             }
 
             function checkOdds(input, pot, bet) {
-                let answer = Math.floor((bet/(pot+(2*bet))*100));
-                if (answer == input.value) {
-                    input.className = 'uk-input uk-form-width-small rangeRow uk-form-success ';
-                } else {
-                    input.className = 'uk-input uk-form-width-small rangeRow uk-form-danger ';
+                if ( input.value !== '' ) {
+                    let answer = Math.floor((bet/(pot+(2*bet))*100));
+                    if (answer == input.value) {
+                        input.className = 'uk-input uk-form-width-small rangeRow uk-form-success ';
+                    } else {
+                        input.className = 'uk-input uk-form-width-small rangeRow uk-form-danger ';
+                    }
                 }
             }
         </script>
