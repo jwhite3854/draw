@@ -61,16 +61,18 @@
         </nav>
     
         <div class="uk-container uk-container-small uk-position-relative uk-margin-bottom">
+            <div id="board-card" class="uk-card uk-card-default uk-card-body uk-padding-small">
                 <h1 class="uk-card-title" style="font-size:18px">Nuts</h1>     
-                <div>
-                    <input type="text" id="rangeInput" class="uk-input uk-form-width-large uk-margin" placeholder="Range" value="AA,AKs,QJo" /> 
-                    <input type="text" id="boardInput" class="uk-input uk-form-width-small" placeholder="Board" value="AsKsQdJcTd" /> 
-                    <button class="uk-button uk-button-default" onclick="calculate();">Calc</button>
-                </div>
-                <div id="results"></div>
-                <table id="grid" class="uk-margin">
+                <input type="text" id="rangeInput" class="uk-input uk-form-width-large uk-margin" placeholder="Range" value="AA,AKs,QJo" /> 
+                <input type="text" id="boardInput" class="uk-input uk-form-width-small" placeholder="Board" value="AsKsQdJcTd" /> 
+                <button class="uk-button uk-button-primary uk-button-default" onclick="calculate();">Calc</button>
+                <div id="results" class="uk-margin"></div>
+            </div>
+            <div class="uk-margin">
+                <table id="grid">
                     <tbody></tbody>
                 </table>
+            </div>    
         </div>
         <script src="js/solve.js"></script>
         <script src="js/nuts.js"></script>
