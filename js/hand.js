@@ -1,13 +1,9 @@
-let numbers = ['A','K','Q','J','T','9','8','7','6','5','4','3','2'];
-let suits = ['s','h','d','c'];
-
 class Card {
     constructor(value, suit){
         this.value = value;
         this.suit = suit;
 
-        let ranks =  ['2','3','4','5','6','7','8','9','T','J','Q','K','A'];
-        this.rank = ranks.indexOf(value);
+        this.rank = ['0','2','3','4','5','6','7','8','9','T','J','Q','K','A'].indexOf(value);
     }
 
     static sort(a, b) {
@@ -28,7 +24,7 @@ class Hand {
         this.cardsPool = cardsPool.sort(Card.sort);
         this.suits = {};
         this.values = [];
-        
+
         this.sfLength = 0;
         this.best = best;
 
@@ -44,13 +40,13 @@ class Hand {
             HighCard
         ];
 
-        this.rank = this.handRankings.length;
+        this.handRank = this.handRankings.length;
 
         for (let i = 0; i < this.handRankings.length; i++) {
             if (this.handRankings[i] === this.constructor) {
                 break;
             }
-            this.rank--;
+            this.handRank--;
         }
 
         // Create the arrays of suits and values.
@@ -126,7 +122,6 @@ class Hand {
         return result;
     }
 }
-
 
 class StraightFlush extends Hand {
     constructor(cardsPool) {
@@ -237,22 +232,10 @@ class Straight extends Hand {
     }
 
     solve() {
-        let card;
 
         this.cards = this.getWheel();
 
-        if (this.cards.length) {
-            for (let i = 0; i < this.cards.length; i++) {
-                card = this.cards[i];
-                if (card.rank === 0) {
-                    card.rank = this.values.indexOf('A');
-                    if (card.value === '1') {
-                        card.value = 'A';
-                    }
-                }
-            }
-          
-            this.cards = this.cards.sort(Card.sort);          
+        if (this.cards.length >= 5) {
             this.name += ', Wheel';
             this.sfLength = 5;
             if (this.cards[0].value === 'A') {
@@ -264,165 +247,65 @@ class Straight extends Hand {
             return true;
         }
 
-        this.cards = this.getGaps();
+        this.cards = this.getRun();
 
         if (this.cards.length >= 5) {
             this.cards = this.cards.slice(0, 5);
-            this.sfLength = this.cards.length;
-            if (this.cards.length < 5) {
-                if (this.cards[this.sfLength-1].rank === 0) {
-                    this.cards = this.cards.concat(this.nextHighest().slice(1, 6-this.cards.length));
-                } else {
-                    this.cards = this.cards.concat(this.nextHighest().slice(0, 5-this.cards.length));
-                }
-            }
         }
 
-        return this.cards.length >= 5;
+        return (this.cards.length >= 5);
     }
 
+    getRun() {
+        let cards = this.cardsPool;
 
-    getGaps() {
-        let card, cardsList, gapCount, prevCard, diff;
-
-        let cardsToCheck = this.cardsPool;
-
-        let gapCards = [];
-        for (let i = cardsToCheck[0].rank + 1; i > 0; i--) {
-            cardsList = [];
-            gapCount = 0;
-            for (var j=0; j<cardsToCheck.length; j++) {
-                card = cardsToCheck[j];
-                if (card.rank > i) {
-                    continue;
-                }
-                prevCard = cardsList[cardsList.length - 1];
-                diff = (prevCard) ? prevCard.rank - card.rank : i - card.rank;
-
-                if (diff === null) {
-                    cardsList.push(card);
-                } else if (5 < (gapCount + diff + cardsList.length)) {
+        for (let i = 0; i < 3; i++) {
+            let topRank = cards[i].rank;
+            let run = [];        
+            for (let i = topRank; i >= 0; i--) {
+                for (let j = 0; j < cards.length; j++) {
+                    console.log(cards[j].rank > i);
+                    console.log(cards[j].rank < i);
+                    if (cards[j].rank > i) {
+                        continue;
+                    }
+                    if (cards[j].rank < i) {
+                        break;
+                    }
+                    run.push(cards[j]);
                     break;
-                } else if (diff > 0) {
-                    cardsList.push(card);
-                    gapCount += (diff - 1);
                 }
             }
-        
-            if (cardsList.length > gapCards.length) {
-                gapCards = cardsList.slice();
+
+            if (run.length >= 5) {
+                return run;
             }
         }
 
-      return gapCards;
+        return [];
     }
 
     getWheel() {
         let cards = this.cardsPool;
+
         for (let i = 0; i < cards.length; i++) {
             if (cards[i].value === 'A') {
-                cards[i].value = '1';
-                cards[i].rank = -1;
+                cards[i].rank = 0;
             }
         }
 
-        console.log(cards);
-
-        let wheelCards = [], cardFound = false, card;
-        for (let i = 3; i > -1; i--) {
-            console.log("===============================");
-            cardFound = false;
+        cards.sort(Card.sort);
+        
+        let wheelCards = [];        
+        for (let i = 4; i >= 0; i--) {
             for (let j = 0; j < cards.length; j++) {
-                card = cards[j];
-                if (card.rank > i) {
+                if (cards[j].rank > i) {
                     continue;
                 }
-                if (card.rank < i) {
+                if (cards[j].rank < i) {
                     break;
                 }
-                wheelCards.push(card);
-                cardFound = true;
-                break;
-            }
-        }
-        
-        if (wheelCards.length >= 5) {
-            for (let i = 0; i < wheelCards.length; i++) {
-                if (wheelCards[i].value === '1') {
-                    wheelCards[i].value = 'A';
-                }
-            }
-        }
-
-        console.log(wheelCards);
-
-        return wheelCards;
-    }
-}
-
-class Straight1 extends Hand {
-    constructor(cardsPool) {
-      super(cardsPool, 'Straight');
-    }
-
-    solve() {
-        let card;
-        this.cards = this.getWheel(this.cardsPool);
-        if (this.cards.length) {
-            for (let i = 0; i < this.cards.length; i++) {
-                card = this.cards[i];
-                if (card.rank === 0) {
-                    card.rank = this.values.indexOf('A');
-                    if (card.value === '1') {
-                        card.value = 'A';
-                    }
-                }
-            }
-          
-            this.cards = this.cards.sort(Card.sort);
-
-          
-            this.sfLength = 5;
-            if (this.cards[0].value === 'A') {
-                this.cards = this.cards.concat(this.nextHighest().slice(1, 5-this.cards.length+1));
-            } else {
-                this.cards = this.cards.concat(this.nextHighest().slice(0, 5-this.cards.length));
-            }
-          
-            return true;
-        }
-        
-        if (this.cards.length >= 5) {
-            this.cards = this.cards.slice(0, 5);
-            this.sfLength = this.cards.length;
-            if (this.cards.length < 5) {
-                if (this.cards[this.sfLength-1].rank === 0) {
-                    this.cards = this.cards.concat(this.nextHighest().slice(1,5-this.cards.length+1));
-                } else {
-                    this.cards = this.cards.concat(this.nextHighest().slice(0, 5-this.cards.length));
-                }
-            }
-        }
-
-        return this.cards.length >= 5;
-    }
-
-    getWheel(cardsPool) {
-        let card, wheelCards, cardFound;
-
-        wheelCards = [];
-        for (let i = 4; i>=0; i--) {
-            cardFound = false;
-            for (let j = 0; j < cardsPool.length; j++) {
-                card = cardsPool[j];
-                if (card.rank > i) {
-                    continue;
-                }
-                if (card.rank < i) {
-                    break;
-                }
-                wheelCards.push(card);
-                cardFound = true;
+                wheelCards.push(cards[j]);
                 break;
             }
         }

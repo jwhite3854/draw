@@ -193,8 +193,10 @@ class RangeNuts {
             let boardAndHoles = this.board.join('') + this.cardsPoolSets[i];
             let table = new CommTable(boardAndHoles);
             table.evaluate();
-            winners.push([table.best, table.cards[0].rank, this.cardsPoolSets[i]], table.cards);
+            winners.push([table.best, table.cards[0].rank, this.cardsPoolSets[i], table.cards]);
         }
+
+        console.log(winners);
 
         let bestHands = [];
         let bestRankingIdx = 0;
