@@ -50,7 +50,7 @@ class RangeGrid {
 
     insertRange(range) {
         this.generate();
-        this.selected = range.split(',');
+        this.selected = range;
         for (let i = 0; i < this.selected.length; i++) {
             let index = this.hands.indexOf(this.selected[i]);
             let row = Math.floor(index/13);
@@ -64,8 +64,6 @@ class RangeGrid {
     decorateTable(table_id) {
         let table = document.getElementById(table_id);
         table.innerHTML = '';
-        
-    
         for (let y = 0; y < 13; y++) {
             let row = document.createElement('tr');
             for (let x = 0; x < 13; x++) {
@@ -119,8 +117,8 @@ class Tile {
 }
 
 class RangeNuts {
-    constructor(rangeString, boardString){
-        this.ranges = rangeString.split(',');
+    constructor(range, boardString){
+        this.ranges = range;
         this.board = boardString.match(/.{2}/g);
         this.cardsPoolSets = [];
 

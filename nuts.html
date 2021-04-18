@@ -9,13 +9,14 @@
         <script src="js/uikit-icons.min.js"></script>
         <style>
             .tile {
-                font-size: 12px;
-                width: 26px;
-                height: 26px;
+                font-size: 10px;
+                width: 22px;
+                height: 22px;
                 line-height: 26px;
                 border: #222 1px solid;
                 border-radius: 2px;
                 text-align: center;
+                letter-spacing: -.05em;
             }
 
             .tile.pair {
@@ -59,7 +60,6 @@
         </nav>
     
         <div class="uk-container uk-container-small uk-position-relative uk-margin-bottom">
-            <div class="uk-card uk-card-default uk-card-body">
                 <h1 class="uk-card-title" style="font-size:18px">Nuts</h1>     
                 <div>
                     <input type="text" id="rangeInput" class="uk-input uk-form-width-large uk-margin" placeholder="Range" value="AA,AKs,QJo" /> 
@@ -70,26 +70,27 @@
                 <table id="grid" class="uk-margin">
                     <tbody></tbody>
                 </table>
-            </div>
         </div>
         <script src="js/solve.js"></script>
         <script src="js/nuts.js"></script>
-        
+        <script src="js/parser.js"></script>
         <script>
             let grid = new RangeGrid();
 
             let calculate = function() {
-                let range = document.getElementById('rangeInput').value;
+                let rangeInput = document.getElementById('rangeInput').value;
                 let board = document.getElementById('boardInput').value;
 
-                grid.insertRange(range);
+                let parser = new RangeParser(rangeInput);
+
+                grid.insertRange(parser.range);
                 grid.decorateTable('grid');
 
                 let table = new CommTable(board);
                 table.evaluate();
                 table.getResults();
 
-                let nuts = new RangeNuts(range, board);
+                let nuts = new RangeNuts(parser.range, board);
                 nuts.findNuts();
             }
 
