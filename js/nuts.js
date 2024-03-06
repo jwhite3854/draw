@@ -117,8 +117,7 @@ class Tile {
 }
 
 class RangeNuts {
-    constructor(range, boardString){
-        this.ranges = range;
+    constructor(ranges, boardString){
         this.board = boardString.match(/.{2}/g);
         this.cardsPoolSets = [];
 
@@ -126,7 +125,7 @@ class RangeNuts {
         this.suits = ['s','h','d','c'];
 
         this.handRankings = [
-         //   'Straight Flush', 
+            'Straight Flush', 
             'Four of a Kind', 
             'Full House', 
             'Flush', 
@@ -137,25 +136,25 @@ class RangeNuts {
             'High Card'
         ];
 
-        this.addRanges();
+        this.addRanges(ranges);
 
     }
 
-    addRanges() {
+    addRanges(ranges) {
 
         let rangeHands = [];
 
-        for(let i = 0; i < this.ranges.length; i++){
-            let hole1 = this.ranges[i][0];
-            let hole2 = this.ranges[i][1];
+        for(let i = 0; i < ranges.length; i++){
+            let hole1 = ranges[i][0];
+            let hole2 = ranges[i][1];
 
-            if ( this.ranges[i].length === 2) {
+            if ( ranges[i].length === 2) {
                 for (let j = 0; j < (this.suits.length - 1); j++) {
                     for (let k = (j + 1); k < this.suits.length; k++) {
                         rangeHands.push(hole1+this.suits[j]+hole2+this.suits[k]);
                     }
                 }
-            } else if ( this.ranges[i][2] === 's' ) {
+            } else if ( ranges[i][2] === 's' ) {
                 for (let j = 0; j < this.suits.length; j++) {
                     for (let k = 0; k < this.suits.length; k++) {
                         if (k === j) {
@@ -163,7 +162,7 @@ class RangeNuts {
                         }
                     }
                 }
-            } else if ( this.ranges[i][2] === 'o' ) {
+            } else if ( ranges[i][2] === 'o' ) {
                 for (let j = 0; j < this.suits.length; j++) {
                     for (let k = 0; k < this.suits.length; k++) {
                         if (k !== j) {
@@ -196,31 +195,13 @@ class RangeNuts {
             winners.push([table.best, table.cards[0].rank, this.cardsPoolSets[i], table.cards]);
         }
 
-        console.log(winners);
+        let nuts = [];
 
-        let bestHands = [];
-        let bestRankingIdx = 0;
-        let bestValue = 0;
-        let doBreak = false;
-        let hands = [];
-
-        outer_loop:
         for (let i = 0; i < this.handRankings.length; i++) {
-            if (doBreak) {
-                break;
-            }
+            let highestRank = 13;
             for (let j = 0; j < winners.length; j++) {
                 if ( this.handRankings[i] === winners[j][0] ) {
-                    if ( bestValue > winners[j][1] ) {
-                        break outer_loop;
-                    }
-                    
-                    bestValue = winners[j][1];
-                    bestHands.push(winners[j][2]);
-                    bestRankingIdx = i;
-                    hands.push(winners[j][3]);
-
-                    doBreak = true;
+                    nuts.push(winners[j][0]);
                 }
             }
         }
@@ -235,6 +216,8 @@ class CommTable {
         
         for (let i = 0; i < this.board.length; i++) {
             let card = new Card(this.board[i][0], this.board[i][1]);
+            console.log(card);
+            console.log('---------------');
             this.cardsPool.push(card);
         }
     }

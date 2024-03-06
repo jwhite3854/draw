@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Pre-Flop Table | JPM Tools</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/uikit.min.css" />
+        <link rel="stylesheet" href="css/style.css" />
+        <script src="js/uikit.min.js"></script>
+        <script src="js/uikit-icons.min.js"></script>
+    </head>
+    <body>
+        <nav class="uk-navbar uk-navbar-container uk-margin">
+            <div class="uk-navbar-left uk-margin-left">
+                <ul class="uk-navbar-nav">
+                    <li><a href="/draw">HOME</a></li>
+                </ul>
+            </div>
+            <div class="uk-navbar-right uk-margin-right">
+                <a class="uk-navbar-toggle uk-icon uk-navbar-toggle-icon" href="#" uk-navbar-toggle-icon="" aria-expanded="false">
+                    <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <rect y="9" width="20" height="2"></rect>
+                        <rect y="3" width="20" height="2"></rect>
+                        <rect y="15" width="20" height="2"></rect>
+                    </svg>
+                </a>
+                <div class="uk-navbar-dropdown" uk-drop="mode: hover; cls-drop: uk-navbar-dropdown;" >
+                    <ul class="uk-nav uk-nav-default">
+                        <li><a href="best.html">Best Hands</a></li>
+                        <li><a href="charts.html">Charts</a></li>
+                        <li><a href="headsup.html">Heads Up</a></li>
+                        <li><a href="nuts.html">Nuts</a></li>
+                        <li><a href="pot-odds.html">Pot Odds</a></li>
+                        <li><a href="range.html">Ranges</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    
+        <div class="uk-container uk-container-small uk-position-relative uk-margin-bottom">
+            <table id="table" class="uk-table" style="width: auto;"></table>
+        </div>
+        <script src="js/main.js"></script>
+        <script src="js/preflop.js"></script>
+        <script>
+            let preflop = new Preflop("table");
+            preflop.play('');
+            
+            let cardsets = document.getElementsByClassName("cardset");
+
+            let toggleVisibility = function() {
+                if (this.classList.contains('hide-cards')) {
+                    this.className = "cardset";
+                } else {
+                    this.className = "cardset hide-cards";
+                }
+            };
+
+            for (var i = 0; i < cardsets.length; i++) {
+                cardsets[i].addEventListener('click', toggleVisibility, false);
+            }
+        </script>
+    </body>
+</html>

@@ -3,7 +3,7 @@ class Card {
         this.value = value;
         this.suit = suit;
 
-        this.rank = ['0','2','3','4','5','6','7','8','9','T','J','Q','K','A'].indexOf(value);
+        this.rank = ['X','2','3','4','5','6','7','8','9','T','J','Q','K','A'].indexOf(value);
     }
 
     static sort(a, b) {
@@ -147,7 +147,7 @@ class StraightFlush extends Hand {
                 this.sfLength = straight.sfLength;
             }
         }
-  
+
         return (this.cards.length >= 5);
     }
 }
@@ -253,6 +253,8 @@ class Straight extends Hand {
             this.cards = this.cards.slice(0, 5);
         }
 
+        
+
         return (this.cards.length >= 5);
     }
 
@@ -261,18 +263,17 @@ class Straight extends Hand {
 
         for (let i = 0; i < 3; i++) {
             let topRank = cards[i].rank;
-            let run = [];        
-            for (let i = topRank; i >= 0; i--) {
-                for (let j = 0; j < cards.length; j++) {
-                    console.log(cards[j].rank > i);
-                    console.log(cards[j].rank < i);
-                    if (cards[j].rank > i) {
+            let run = [];
+            outer_loop:
+            for (let j = topRank; j >= 0; j--) {
+                for (let k = 0; k < cards.length; k++) {
+                    if (cards[k].rank > j) {
                         continue;
                     }
-                    if (cards[j].rank < i) {
-                        break;
+                    if (cards[k].rank < j) {
+                        break outer_loop;
                     }
-                    run.push(cards[j]);
+                    run.push(cards[k]);
                     break;
                 }
             }

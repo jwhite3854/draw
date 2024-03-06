@@ -15,6 +15,12 @@
     border-color: #f00;
 }
 
+.hide-cards > div {
+    color: #333;
+    background-color: #333;
+    border-color: #222;
+}
+
 .jw-cardc::after {
     content: '\2663';
     font-size: 25px;
